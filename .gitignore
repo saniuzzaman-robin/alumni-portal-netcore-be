@@ -1,0 +1,80 @@
+# Visual Studio auto-generated files
+.vs/
+bin/
+obj/
+
+# .NET build artifacts
+*.dll
+*.exe
+*.pdb
+*.userprefs
+*.log
+
+# NuGet packages
+*.nupkg
+/packages/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+AnyCPU/
+*.cache
+
+# Visual Studio generated project files
+*.csproj.user
+*.suo
+*.user
+*.vspscc
+*.vssscc
+*.sln.docstates
+
+# Resharper
+_ReSharper*/
+*.ReSharper*
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# MSTest test Results
+[Tt]est[Rr]esult.xml
+[Dd]ebugTestApplications/
+
+# GhostDoc plugin setting file
+*.GhostDoc.xml
+
+# Visual Studio Code
+.vscode/
+*.vscode/
+
+# Visual Studio Online (VSTS)
+/.vsts
+
+# CodeRush
+.cr/
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Installshield output folder
+[Ee]xpress/
+
+# DocProject generated documentation
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+# Click-Once deployment files
+publish/
+
+# Publish Web Output
+*.[Pp]ublish.xml
+*.azurePubxml
