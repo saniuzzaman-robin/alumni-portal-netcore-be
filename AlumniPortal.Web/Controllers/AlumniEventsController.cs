@@ -1,9 +1,7 @@
 ﻿using AlumniPortal.Application.Repositories;
-using AlumniPortal.Domain;
+using AlumniPortal.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata;
 
 [ApiController]
 [Route("api/[controller]")]

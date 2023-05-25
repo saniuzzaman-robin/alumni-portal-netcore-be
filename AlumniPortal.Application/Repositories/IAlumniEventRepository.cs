@@ -1,4 +1,4 @@
-﻿using AlumniPortal.Domain;
+﻿using AlumniPortal.Domain.Models;
 
 namespace AlumniPortal.Application.Repositories
 {

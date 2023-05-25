@@ -1,5 +1,5 @@
 ﻿using AlumniPortal.Application.Repositories;
-using AlumniPortal.Domain;
+using AlumniPortal.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 

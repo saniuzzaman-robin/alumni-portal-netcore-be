@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlumniPortal.Application.Contracts
 {
-    public class IEventService
+    public class IAlumniEventService
     {
     }
 }
