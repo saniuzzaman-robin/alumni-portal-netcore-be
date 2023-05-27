@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace AlumniPortal.Domain.Models
+namespace AlumniPortal.Domain.Entities
 {
     public class AlumniEvent
     {

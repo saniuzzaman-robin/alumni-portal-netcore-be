@@ -1,6 +1,5 @@
-﻿using AlumniPortal.Domain.DTOs;
-using AlumniPortal.Domain.Models;
-using AspNetCore.Identity.MongoDbCore.Models;
+﻿using AlumniPortal.Domain.Auth;
+using AlumniPortal.Domain.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +9,13 @@ namespace AlumniPortal.Web.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
-        public AuthController(UserManager<User> userManager, RoleManager<Role> roleManager) { 
+        private readonly PasswordHasher<string> _passwordHaser;
+        public AuthController(UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager) { 
             _userManager = userManager;
             _roleManager = roleManager;
+            _passwordHaser = new PasswordHasher<string>();
         }
 
         [HttpPost]
@@ -25,10 +26,11 @@ namespace AlumniPortal.Web.Controllers
             {
                 return NotFound();
             }
-            var identityUser = new User
+            var identityUser = new ApplicationUser
             {
                 UserName = registerRequestDto.Username,
-                Email = registerRequestDto.Username
+                Email = registerRequestDto.Username,
+                PasswordHash = _passwordHaser.HashPassword(null, registerRequestDto.Password)
             };
             var identityResult = await _userManager.CreateAsync(identityUser);
             if(identityResult.Succeeded)
@@ -64,6 +66,22 @@ namespace AlumniPortal.Web.Controllers
                 await _roleManager.CreateAsync(new Role { Name = roleCreateRequestDto.Name , Id = Guid.NewGuid()});
                 return Ok();
             }
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        {
+            var user = await _userManager.FindByEmailAsync(loginRequestDto.Username);
+            if(user != null)
+            {
+                var checkPasswordResult = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+                if(checkPasswordResult)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest("Username or Password is incorrect");
         }
     }
 }

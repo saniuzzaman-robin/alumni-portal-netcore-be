@@ -1,9 +1,13 @@
+using AlumniPortal.Application.Contract;
+using AlumniPortal.Application.Implementation;
+using AlumniPortal.Application.Middleware;
 using AlumniPortal.Application.Repositories;
-using AlumniPortal.Domain.Models;
+using AlumniPortal.Domain.Auth;
 using AlumniPortal.Infrastructure.DbContext;
 using AlumniPortal.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -22,8 +26,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     ValidAudience = builder.Configuration["Jwt:Audience"],
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 });
-builder.Services.AddIdentity<User, Role>()
-        .AddMongoDbStores<User, Role, Guid>(builder.Configuration
+builder.Services.AddIdentity<ApplicationUser, Role>()
+        .AddMongoDbStores<ApplicationUser, Role, Guid>(builder.Configuration
         .GetConnectionString("MongoDb"), builder.Configuration
         .GetConnectionString("AlumniDatabaseName"));
 builder.Services.Configure<IdentityOptions>(options => {
@@ -37,6 +41,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IAlumniEventMongoDatabase, AlumniEventMongoDatabase>();
 builder.Services.AddSingleton<IAlumniEventRepository, AlumniEventRepository>();
+//builder.Services.AddTransient<IDateTimeService, DateTimeService>();
+//builder.Services.AddTransient<IAccountService, AccountService>();
 
 var app = builder.Build();
 
@@ -48,6 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<CustomExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

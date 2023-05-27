@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlumniPortal.Application.Contracts
+namespace AlumniPortal.Domain.Settings
 {
-    public class IAlumniEventService
+    public class AppSettings
     {
+        public ApplicationDetail ApplicationDetail { get; set; }
     }
 }
