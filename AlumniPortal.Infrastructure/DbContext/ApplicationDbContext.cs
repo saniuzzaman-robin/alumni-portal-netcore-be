@@ -1,9 +1,12 @@
 ﻿using AlumniPortal.Domain.Entities;
-using System.Threading.Tasks;
 using MongoDB.Driver;
-using System.Reflection.Metadata;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AlumniPortal.Persistence
+namespace AlumniPortal.Infrastructure.DbContext
 {
     public class ApplicationDbContext : IApplicationDbContext
     {
@@ -18,4 +21,3 @@ namespace AlumniPortal.Persistence
         //public IMongoCollection<Blog> Blogs => _database.GetCollection<Blog>("blogs");
     }
 }
-

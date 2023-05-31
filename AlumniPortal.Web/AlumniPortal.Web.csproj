@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlumniPortal.Application\AlumniPortal.Application.csproj" />
-    <ProjectReference Include="..\AlumniPortal.Infrastructure\AlumniPortal.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

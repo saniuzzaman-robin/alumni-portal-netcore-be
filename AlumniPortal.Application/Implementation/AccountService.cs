@@ -13,25 +13,29 @@ using System.Security.Cryptography;
 using System.Text;
 using AlumniPortal.Application.Contract;
 using AlumniPortal.Application.Exceptions;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver.Linq;
 
 namespace AlumniPortal.Application.Implementation
 {
     public class AccountService : IAccountService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly JWTSettings _jwtSettings;
         private readonly IDateTimeService _dateTimeService;
         private readonly IFeatureManager _featureManager;
+        private readonly IConfiguration _configuration;
         public AccountService(UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<Role> roleManager,
             IOptions<JWTSettings> jwtSettings,
             IDateTimeService dateTimeService,
             SignInManager<ApplicationUser> signInManager,
             IEmailService emailService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -40,6 +44,7 @@ namespace AlumniPortal.Application.Implementation
             _signInManager = signInManager;
             _emailService = emailService;
             _featureManager = featureManager;
+            _configuration = configuration;
         }
 
         public async Task<Response<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request, string ipAddress)
@@ -47,17 +52,17 @@ namespace AlumniPortal.Application.Implementation
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                throw new ApiException($"No Accounts Registered with {request.Email}.");
+                return new Response<AuthenticationResponse>(new AuthenticationResponse(), "Not found");
             }
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
-                throw new ApiException($"Invalid Credentials for '{request.Email}'.");
+                return new Response<AuthenticationResponse>(new AuthenticationResponse(), "Wrong password");
             }
-            if (!user.EmailConfirmed)
+            /*if (!user.EmailConfirmed)
             {
                 throw new ApiException($"Account Not Confirmed for '{request.Email}'.");
-            }
+            }*/
             JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
             AuthenticationResponse response = new AuthenticationResponse();
             response.Id = user.Id.ToString();
@@ -93,13 +98,13 @@ namespace AlumniPortal.Application.Implementation
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, Roles.Basic.ToString());
-                    var verificationUri = await SendVerificationEmail(user, origin);
+                    //var verificationUri = await SendVerificationEmail(user, origin);
 
-                    if (await _featureManager.IsEnabledAsync(nameof(FeatureManagement.EnableEmailService)))
+                    /*if (await _featureManager.IsEnabledAsync(nameof(FeatureManagement.EnableEmailService)))
                     {
                         await _emailService.SendEmailAsync(new MailRequest() { From = "amit.naik8103@gmail.com", ToEmail = user.Email, Body = $"Please confirm your account by visiting this URL {verificationUri}", Subject = "Confirm Registration" });
-                    }
-                    return new Response<string>(user.Id.ToString(), message: $"User Registered. Please confirm your account by visiting this URL {verificationUri}");
+                    }*/
+                    return new Response<string>(user.Id.ToString(), message: $"User Registered.");
                 }
                 else
                 {
@@ -110,6 +115,16 @@ namespace AlumniPortal.Application.Implementation
             {
                 throw new ApiException($"Email {request.Email } is already registered.");
             }
+        }
+
+        public async Task<bool> CreateRole(Role role)
+        {
+            if(role == null)
+            {
+                return false;
+            }
+            var roleCreated = await _roleManager.CreateAsync(role);
+            return roleCreated.Succeeded;
         }
 
         private async Task<JwtSecurityToken> GenerateJWToken(ApplicationUser user)
@@ -137,14 +152,14 @@ namespace AlumniPortal.Application.Implementation
             .Union(userClaims)
             .Union(roleClaims);
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+                expires: DateTime.UtcNow.AddMinutes(120),
                 signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }

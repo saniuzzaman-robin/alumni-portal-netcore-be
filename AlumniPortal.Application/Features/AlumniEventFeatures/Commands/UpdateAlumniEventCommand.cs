@@ -1,4 +1,4 @@
-﻿using AlumniPortal.Persistence;
+﻿using AlumniPortal.Infrastructure.DbContext;
 using MediatR;
 using System.Linq;
 using System.Threading;

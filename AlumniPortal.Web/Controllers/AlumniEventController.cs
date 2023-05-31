@@ -3,40 +3,45 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AlumniPortal.Application.Features.AlumniEventFeatures.Commands;
 using AlumniPortal.Application.Features.AlumniEventFeatures.Queries;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace AlumniPortal.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/AlumniEvent")]
     public class AlumniEventController : ControllerBase
     {
-        private IMediator _mediator;
-        protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+       private readonly IMediator _mediator;
+
+        public AlumniEventController(IMediator mediator)
+        {
+           _mediator = mediator;
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateAlumniEventCommand command)
         {
-            return Ok(await Mediator.Send(command));
+            return Ok(await _mediator.Send(command));
         }
 
         [HttpGet]
-        [Route("")]
+        [Route("GetAll")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await Mediator.Send(new GetAllAlumniEventQuery()));
+            return Ok(await _mediator.Send(new GetAllAlumniEventQuery()));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            return Ok(await Mediator.Send(new GetAlumniEventByIdQuery { Id = id }));
+            return Ok(await _mediator.Send(new GetAlumniEventByIdQuery { Id = id }));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            return Ok(await Mediator.Send(new DeleteAlumniEventByIdCommand { Id = id }));
+            return Ok(await _mediator.Send(new DeleteAlumniEventByIdCommand { Id = id }));
         }
 
 
@@ -47,7 +52,7 @@ namespace AlumniPortal.Controllers
             {
                 return BadRequest();
             }
-            return Ok(await Mediator.Send(command));
+            return Ok(await _mediator.Send(command));
         }
     }
 }

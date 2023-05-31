@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using AlumniPortal.Domain.Entities;
-using AlumniPortal.Persistence;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AlumniPortal.Infrastructure.DbContext;
+using MongoDB.Driver;
 
 namespace AlumniPortal.Application.Features.AlumniEventFeatures.Queries
 {
@@ -19,10 +20,9 @@ namespace AlumniPortal.Application.Features.AlumniEventFeatures.Queries
             }
             public async Task<AlumniEvent> Handle(GetAlumniEventByIdQuery request, CancellationToken cancellationToken)
             {
-                /*var customer = _context.AlumniEvents.Where(a => a.Id == request.Id).FirstOrDefault();
-                if (customer == null) return null;
-                return customer;*/
-                return null;
+                var filter = Builders<AlumniEvent>.Filter.Eq("_id", Guid.Parse(request.Id));
+                var alumniEvent = await _context.AlumniEvents.Find(filter).FirstOrDefaultAsync();
+                return alumniEvent;
             }
         }
     }

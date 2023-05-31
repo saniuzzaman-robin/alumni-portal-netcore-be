@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AlumniPortal.Infrastructure.DbContext;
 using AlumniPortal.Infrastructure.Mapping;
-using AlumniPortal.Persistence;
-using AlumniPortal.Application.Contract;
-using AlumniPortal.Application.Implementation;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace AlumniPortal.Infrastructure.Extension
+namespace AlumniPortal.Infrastructure.ServiceContainer
 {
     public static class ConfigureServiceContainer
     {

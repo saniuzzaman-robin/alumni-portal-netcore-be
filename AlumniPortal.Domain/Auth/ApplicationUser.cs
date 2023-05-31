@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AlumniPortal.Domain.Auth
 {
-    [CollectionName("Roles")]
+    [CollectionName("Users")]
     public class ApplicationUser : MongoIdentityUser<Guid>
     {
         public string FirstName { get; set; }

@@ -2,9 +2,11 @@
 using AlumniPortal.Domain.Auth;
 using System.Threading.Tasks;
 using AlumniPortal.Application.Contract;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlumniPortal.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -42,6 +44,12 @@ namespace AlumniPortal.Controllers
         {
 
             return Ok(await _accountService.ResetPassword(model));
+        }
+
+        [HttpPost("create-role")]
+        public async Task<IActionResult> CreateRole(Role role)
+        {
+            return Ok(await _accountService.CreateRole(role));
         }
         private string GenerateIPAddress()
         {

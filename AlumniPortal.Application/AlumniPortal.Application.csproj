@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlumniPortal.Domain\AlumniPortal.Domain.csproj" />
-    <ProjectReference Include="..\AlumniPortal.Persistance\AlumniPortal.Persistence.csproj" />
+    <ProjectReference Include="..\AlumniPortal.Infrastructure\AlumniPortal.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
