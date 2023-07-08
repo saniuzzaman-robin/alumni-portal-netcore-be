@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using AlumniPortal.Application.Features.AlumniEventFeatures.Commands;
 using AlumniPortal.Application.Features.AlumniEventFeatures.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AlumniPortal.Application.Implementation;
+using AlumniPortal.Application.Contract;
 
 namespace AlumniPortal.Controllers
 {
@@ -11,11 +13,13 @@ namespace AlumniPortal.Controllers
     [Route("api/AlumniEvent")]
     public class AlumniEventController : ControllerBase
     {
-       private readonly IMediator _mediator;
+        private readonly IMediator _mediator;
+        private readonly IImageConverterService _imageConverterService;
 
-        public AlumniEventController(IMediator mediator)
+        public AlumniEventController(IMediator mediator, IImageConverterService imageConverterService)
         {
-           _mediator = mediator;
+            _mediator = mediator;
+            _imageConverterService = imageConverterService;
         }
 
         [HttpPost]
@@ -53,6 +57,13 @@ namespace AlumniPortal.Controllers
                 return BadRequest();
             }
             return Ok(await _mediator.Send(command));
+        }
+
+        [HttpGet("compress")]
+        public async Task<IActionResult> Convert(string imageUri)
+        {
+            var response = await _imageConverterService.ConvertAsync(imageUri);
+            return Ok(response.ToString());
         }
     }
 }

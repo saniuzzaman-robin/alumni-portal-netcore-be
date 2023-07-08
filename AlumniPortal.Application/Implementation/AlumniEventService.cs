@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlumniPortal.Application.Services
+namespace AlumniPortal.Application.Implementation
 {
     internal class AlumniEventService
     {

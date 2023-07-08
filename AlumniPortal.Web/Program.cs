@@ -51,6 +51,7 @@ builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<Role>>();
 builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddSingleton<IImageConverterService, ImgurImageConverterService>();
 
 var app = builder.Build();
 
