@@ -44,8 +44,8 @@ new ApplicationDbContext(builder.Configuration.GetConnectionString("MongoDb"), b
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IDateTimeService, DateTimeService>();
-builder.Services.AddTransient<IEmailService, MailService>();
+builder.Services.AddSingleton<IDateTimeService, DateTimeService>();
+builder.Services.AddSingleton<IEmailService, MailService>();
 builder.Services.AddSingleton<IFeatureManager, FeatureManager>();
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<Role>>();
@@ -65,8 +65,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 //app.UseMiddleware<CustomExceptionMiddleware>();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.MapControllers();
 

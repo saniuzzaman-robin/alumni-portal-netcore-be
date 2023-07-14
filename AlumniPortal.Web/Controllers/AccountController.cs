@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AlumniPortal.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
